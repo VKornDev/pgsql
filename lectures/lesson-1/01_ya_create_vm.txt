@@ -1,0 +1,48 @@
+-- ЯО
+-- ВМ
+yc vpc network list
+
+-- https://github.com/yandex-cloud/docs/blob/master/ru/cli/quickstart.md
+-- https://cloud.yandex.ru/docs/compute/concepts/vm-metadata
+!! not --name mongo-instance \
+!! --ssh-key ~/.ssh/aeugene.pub
+
+
+yc compute instance create \
+    --name mongo-instance \
+    --hostname mongo-instance \
+    --create-boot-disk size=15G,type=network-ssd,image-folder-id=standard-
+images,image-family=ubuntu-2204-lts \
+    --network-interface subnet-name=default-ru-central1-a,nat-ip-
+version=ipv4 \
+    --zone ru-central1-a \
+    --metadata-from-file ssh-keys=/home/aeugene/.ssh/aeugene.txt
+
+yc compute instance get mongo-instance
+yc compute instance get --full mongo-instance
+
+ssh aeugene@158.160.38.127
+ssh yc-user@158.160.38.127
+ssh root@158.160.38.127
+ssh ubuntu@158.160.38.127
+
+yc compute ssh --name mongo-instance
+--folder-id b1ganckb3d0l9nns6gtf
+
+
+-- если что пошло не так - серийная консоль
+-- https://github.com/yandex-
+cloud/docs/blob/master/ru/compute/operations/serial-console/index.md
+
+-- если отваливается ссх клиент
+-o ServerAliveInterval=60
+
+-- https://selectel.ru/blog/tutorials/how-to-generate-ssh/
+
+ssh-keygen -t rsa
+
+-- запускаем агента, если не запущен
+eval `ssh-agent -s`
+ssh-add .ssh/id_rsa
+
+-- добавим ключ в metadata
